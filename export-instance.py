@@ -27,7 +27,6 @@ inDesign_folder = "/Applications/Adobe InDesign CC 2019/Fonts"
 font_name = the_font.familyName
 date = datetime.now().strftime('%Y-%m-%d')
 timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M')
-print(timestamp)
 
 if os.path.isdir(os.path.join(export_folder, date)) == False:
 	os.mkdir(os.path.join(export_folder, date))
@@ -42,8 +41,6 @@ for instance in the_font.instances:
 		# export to InDesign folder
 		file_name = "{}-{}.otf".format(font_name, instance.name)
 		export_path_name = export_path + "/" + file_name
-		print(export_path)
-		print(export_path_name)
 		#check if there is already a project folder inside the indesignfolder
 		if os.path.isdir(os.path.join(inDesign_folder, font_name)) == False:
 			os.mkdir(os.path.join(inDesign_folder, font_name))
