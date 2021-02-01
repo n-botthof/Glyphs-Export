@@ -5,8 +5,6 @@
 #
 # The OTF files’ names contain metadata about the export. 
 # The copies in InDesign’s folder only contain the font family’s and the instance’s names, and are overwritten at every invocation.
-#
-# The path to the export folder and the InDesign folder can easily be modified.
 
 
 import os
@@ -27,21 +25,43 @@ inDesign_folder = "/Applications/Adobe InDesign CC 2019/Fonts"
 
 
 font_name = the_font.familyName
-timestamp = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+date = datetime.now().strftime('%Y-%m-%d')
+timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M')
+print(timestamp)
+
+if os.path.isdir(os.path.join(export_folder, date)) == False:
+	os.mkdir(os.path.join(export_folder, date))
 
 for instance in the_font.instances:
-	if instance.active:
 
-		# export to export folder
-		file_name = "{}-{} {} {}.{:03}.otf".format(font_name, instance.name, timestamp, the_font.versionMajor, the_font.versionMinor)
-		export_path = os.path.join(export_folder, file_name)
+	# export to export folder
+	if instance.active:
+		export_path = os.path.join(export_folder, date)
 		instance.generate(FontPath = export_path, AutoHint = False)
 
 		# export to InDesign folder
 		file_name = "{}-{}.otf".format(font_name, instance.name)
-		inDesign_path = os.path.join(inDesign_folder, file_name)
-		copyfile(export_path, inDesign_path)
+		export_path_name = export_path + "/" + file_name
+		print(export_path)
+		print(export_path_name)
+		#check if there is already a project folder inside the indesignfolder
+		if os.path.isdir(os.path.join(inDesign_folder, font_name)) == False:
+			os.mkdir(os.path.join(inDesign_folder, font_name))
+		#copy into this folder in indesign
+		inDesign_path = os.path.join(inDesign_folder ,font_name, file_name)
+		copyfile(export_path_name, inDesign_path)
 
+# check if there is an Archive, if not create it
+if os.path.isdir(os.path.join(export_folder, "Archive")) == False:
+	os.mkdir(os.path.join(export_folder, "Archive"))
 
-Glyphs.showNotification("Export Fonts", "done exporting {}".format(Glyphs.font.familyName))
+original_fontname = font_name
+the_font.familyName = original_fontname + "_" + timestamp
 
+for instance in the_font.instances:
+	archive_path = os.path.join(export_folder, "Archive")
+	instance.generate(FontPath = archive_path, AutoHint = False)
+
+the_font.familyName = original_fontname
+
+Glyphs.showNotification("Export Fonts", "Done exporting and archiving {}".format(Glyphs.font.familyName))
