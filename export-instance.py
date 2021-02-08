@@ -39,7 +39,8 @@ for instance in the_font.instances:
 		instance.generate(FontPath = export_path, AutoHint = False)
 
 		# export to InDesign folder
-		file_name = "{}-{}.otf".format(font_name, instance.name)
+		instance_woS = ''.join(e for e in instance.name if e.isalnum())
+		file_name = "{}-{}.otf".format(font_name, instance_woS)
 		export_path_name = export_path + "/" + file_name
 		#check if there is already a project folder inside the indesignfolder
 		if os.path.isdir(os.path.join(inDesign_folder, font_name)) == False:
