@@ -32,7 +32,7 @@ if os.path.isdir(os.path.join(export_folder, date)) == False:
 	os.mkdir(os.path.join(export_folder, date))
 
 for instance in the_font.instances:
-
+	print("Exportieren von: "+ instance.name)
 	# export to export folder
 	if instance.active:
 		export_path = os.path.join(export_folder, date)
